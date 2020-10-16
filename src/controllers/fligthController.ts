@@ -14,13 +14,14 @@ export const getFlight = (req:Request, res:Response) =>{
 }
 
 export const getFlights = (req:Request, res:Response) => {
-    const query = `SELECT * FROM flight`;
+    const query = `SELECT flight.id, origin, destination, hour, date,name_lobby, name_hangar FROM flight 
+                    INNER JOIN lobby ON lobby_id=lobby.id 
+                    INNER JOIN hangar ON hangar_id=hangar.id;    `;
     mysql_client.query(query, (err, results)=>{
         if(err)return res.json({ok:true, message:"Route Get Flights does not work"});
         res.json({ok:true, flights:results});
     });
 }
-
 export const createFlight = (req:Request, res:Response) =>{
     const {origin, destination, hour, date, airplane_id, lobby_id, hangar_id, pilots, members} = req.body;
     if(!origin || !destination || !hour || !date || !airplane_id || !lobby_id || !hangar_id || !pilots || !members){
